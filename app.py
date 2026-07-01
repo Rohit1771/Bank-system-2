@@ -29,6 +29,10 @@ def register():
         existing_user = cursor.fetchone()
         if existing_user:
             return "User with this email already exists"
+        cursor.execute("SELECT username FROM users WHERE username = ?", (username,))
+        existing_username = cursor.fetchone()
+        if existing_username:
+            return "User with this username already exists"
         cursor.execute("""INSERT INTO users(username,email,password) 
                         values(?,?,?)""",(username,email,password))
         conn.commit()
