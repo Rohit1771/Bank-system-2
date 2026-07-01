@@ -1,7 +1,8 @@
 import sqlite3
-from flask import Flask,render_template, request
+from flask import Flask,render_template, request, flash
 
 app = Flask(__name__)
+app.secret_key = "rohit123"
 
 @app.route("/")
 def home():
@@ -27,9 +28,8 @@ def register():
                         values(?,?,?)""",(username,email,password))
         conn.commit()
         conn.close()
-        print("Form Submitted")
-        print(f"Username: {username}, Email: {email},Password: {password}, Confirm Password: {confirm_password}")
-
+        
+        flash("User registered successfully")    
     return render_template("register.html")
 
 app.run(debug=True)
