@@ -1,3 +1,4 @@
+import sqlite3
 from flask import Flask,render_template, request
 
 app = Flask(__name__)
@@ -20,6 +21,12 @@ def register():
         confirm_password = request.form.get("confirm_password")
         if password != confirm_password:
             return "Passwords do not match"
+        conn = sqlite3.connect("bank.db")
+        cursor = conn.cursor()
+        cursor.execute("""INSERT INTO users(username,email,password) 
+                        values(?,?,?)""",(username,email,password))
+        conn.commit()
+        conn.close()
         print("Form Submitted")
         print(f"Username: {username}, Email: {email},Password: {password}, Confirm Password: {confirm_password}")
 
