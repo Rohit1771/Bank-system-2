@@ -24,7 +24,7 @@ def register():
             return "Passwords do not match"
         conn = sqlite3.connect("bank.db")
         cursor = conn.cursor()
-        cursor.execute
+        
         cursor.execute("SELECT email FROM users WHERE email = ?", (email,))
         existing_user = cursor.fetchone()
         if existing_user:
@@ -32,13 +32,15 @@ def register():
         cursor.execute("SELECT username FROM users WHERE username = ?", (username,))
         existing_username = cursor.fetchone()
         if existing_username:
-            return "User with this username already exists"
+            flash("username already exists", "error")
+            return render_template("register.html")
+
         cursor.execute("""INSERT INTO users(username,email,password) 
                         values(?,?,?)""",(username,email,password))
         conn.commit()
         conn.close()
         
-        flash("User registered successfully")    
+        flash("User registered successfully", "success")    
     return render_template("register.html")
 
 app.run(debug=True)
