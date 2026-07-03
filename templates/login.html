@@ -4,12 +4,29 @@
     <title>Login</title>
 </head>
 <body>
-    <input type="text"
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+                {% for category, message in messages %}
+                  {% if category == 'success' %}
+                    <p style="color: green;">
+                        {{ message }}</p>
+                        {% else %}
+                        <p style="color: red;">
+                        {{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form action="/login" method="POST">
+
+    <input type="text" name="username" 
     placeholder="Username">
-    <input type="password"
+
+    <input type="password" name="password"
     placeholder="Password">
 
-    <button>Login</button>
+    <button type="submit">"login"</button>
+    </form>
 
     <p>Don't Have an account?</p>
     <a href="/register">Register</a>
