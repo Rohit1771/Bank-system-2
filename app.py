@@ -6,9 +6,14 @@ app.secret_key = "rohit123"
 
 @app.route("/")
 def home():
-    if "username" in session:
-        return(url_for("home"))
     return render_template("index.html")
+
+@app.route("/dashboard")
+def dashboard():
+    if "username" not in session:
+        return redirect(url_for("login"))
+    
+    return render_template("dashboard.html", usename=session["username"])
 
 @app.route("/logout")
 def logout():
@@ -32,7 +37,7 @@ def login():
         if user:
             flash("Login successful", "success")
             session["username"] = username
-            return redirect(url_for("home"))
+            return redirect(url_for("dashboard"))
         else:
             flash("Invalid username or password", "error")
             return redirect(url_for("login"))
@@ -74,6 +79,6 @@ def register():
         conn.close()
         
         flash("User registered successfully", "success")    
-        return render_template("register.html")
+    return render_template("register.html")
 
 app.run(debug=True)
