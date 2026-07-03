@@ -1,12 +1,20 @@
 import sqlite3
-from flask import Flask,render_template, request, flash, redirect, url_for ,session
+from flask import Flask,render_template, request, flash, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = "rohit123"
 
 @app.route("/")
 def home():
+    if "username" in session:
+        return(url_for("home"))
     return render_template("index.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    flash("You have been logged out", "success")
+    return redirect(url_for("login"))
 
 @app.route("/login",
           methods=["GET", "POST"])
