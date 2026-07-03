@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask,render_template, request, flash, redirect, url_for 
+from flask import Flask,render_template, request, flash, redirect, url_for ,session
 
 app = Flask(__name__)
 app.secret_key = "rohit123"
@@ -23,7 +23,8 @@ def login():
         conn.close()
         if user:
             flash("Login successful", "success")
-            return redirect(url_for("login"))
+            session["username"] = username
+            return redirect(url_for("home"))
         else:
             flash("Invalid username or password", "error")
             return redirect(url_for("login"))
