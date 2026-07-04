@@ -11,9 +11,15 @@ def home():
 @app.route("/dashboard")
 def dashboard():
     if "username" not in session:
+        flash("Please login first", "error")
         return redirect(url_for("login"))
-    
-    return render_template("dashboard.html", usename=session["username"])
+    conn = sqlite3.connect("bank.db")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT BALANCE FROM users WHERE username = ?", (session["username"],))
+    balance = cursor.fetchone()[0]
+    conn.close()
+    return render_template("dashboard.html", username=session["username"], balance=balance)
 
 @app.route("/logout")
 def logout():
