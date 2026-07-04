@@ -112,4 +112,29 @@ def deposit():
         return redirect(url_for("dashboard"))
     return render_template("deposit.html")
 
+@app.route("/withdraw", methods=["GET", "POST"])
+def withdraw():
+    if request.method == "POST":
+        try:
+            amount = int(request.form.get("amount"))
+        except ValueError:
+            flash("Please enter a valid amount", "error")
+            return redirect(url_for("withdraw"))
+        if amount <= 0:
+            flash("Please enter a valid amount", "error")
+            return redirect(url_for("withdraw"))
+        
+        conn = sqlite3.connect("bank.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT BALANCE FROM users WHERE username = ?", (session["username"],))
+        current_balance = cursor.fetchone()[0]
+        new_balance = current_balance - amount
+        cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance, session["username"]))
+        conn.commit()
+        conn.close()
+        flash(f"Withdrew {amount} successfully", "success")
+        return redirect(url_for("dashboard"))
+    return render_template("withdraw.html")
+
 app.run(debug=True)
