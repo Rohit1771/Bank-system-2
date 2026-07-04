@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deposit</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+                {% for category, message in messages %}
+                  {% if category == 'success' %}
+                    <p style="color: green;">
+                        {{ message }}</p>
+                        {% else %}
+                        <p style="color: red;">
+                        {{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form action="/deposit" method="POST">
+    <input type="number" name="amount"
+    placeholder="Enter amount to deposit">
+    <button type="submit">"Deposit"</button>
+    </form>
+</body>
+</html>
