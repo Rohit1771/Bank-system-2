@@ -106,6 +106,14 @@ def deposit():
         current_balance = cursor.fetchone()[0]
         new_balance = current_balance + (amount)
         cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance, session["username"]))
+
+        cursor.execute("""INSERT INTO transactions(sender,receiver, amount,transaction_type)
+             VALUES(?,?,?,?)""",
+             (
+                 session["username"],
+                 session["username"],
+                 amount,
+                 "Deposit"))
         conn.commit()
         conn.close()
         flash(f"Deposited {amount} successfully", "success")
@@ -131,6 +139,14 @@ def withdraw():
         current_balance = cursor.fetchone()[0]
         new_balance = current_balance - amount
         cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance, session["username"]))
+
+        cursor.execute("""INSERT INTO transactions(sender,receiver, amount,transaction_type)
+             VALUES(?,?,?,?)""",
+             (
+                 session["username"],
+                 session["username"],
+                 amount,
+                 "Withdrawal"))
         conn.commit()
         conn.close()
         flash(f"Withdrew {amount} successfully", "success")
@@ -176,12 +192,21 @@ def transfer():
         
         cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance_sender, session["username"]))
         cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance_receiver, receiver_username))
+
+        cursor.execute("""INSERT INTO transactions(sender,receiver, amount,transaction_type)
+             VALUES(?,?,?,?)""",
+             (
+                 session["username"],
+                 session["username"],
+                 amount,
+                 "Transfer"))
         
         conn.commit()
         conn.close()
         
         flash(f"Transferred {amount} to {receiver_username} successfully", "success")
         return redirect(url_for("dashboard"))
+    return render_template("transfer.html")
         
         
-app.run(debug=True)
+app.run(debug=True) 
