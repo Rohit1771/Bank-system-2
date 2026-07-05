@@ -197,7 +197,7 @@ def transfer():
              VALUES(?,?,?,?)""",
              (
                  session["username"],
-                 session["username"],
+                 receiver_username,
                  amount,
                  "Transfer"))
         
@@ -207,6 +207,17 @@ def transfer():
         flash(f"Transferred {amount} to {receiver_username} successfully", "success")
         return redirect(url_for("dashboard"))
     return render_template("transfer.html")
-        
-        
+
+@app.route("/transaction_history")
+def transaction_history():
+
+    conn = sqlite3.connect("bank.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM transactions WHERE sender = ? OR receiver = ? ORDER BY date DESC", (session["username"], session["username"]))
+    transactions = cursor.fetchall()
+    conn.close()
+    return render_template("transaction_history.html", transactions=transactions)
+
 app.run(debug=True) 
