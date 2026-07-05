@@ -137,4 +137,51 @@ def withdraw():
         return redirect(url_for("dashboard"))
     return render_template("withdraw.html")
 
+@app.route("/transfer", methods=["GET", "POST"])
+def transfer():
+    if request.method == "POST":
+        receiver_username = request.form.get("receiver_username")
+        try:
+            amount = int(request.form.get("amount"))
+        except ValueError:
+            flash("Please enter a valid amount", "error")
+            return redirect(url_for("transfer"))
+        if amount <= 0:
+            flash("Please enter a valid amount", "error")
+            return redirect(url_for("transfer"))
+
+        conn = sqlite3.connect("bank.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT BALANCE FROM users WHERE username = ?", (session["username"],))
+        current_balance = cursor.fetchone()[0]
+        
+        if current_balance < amount:
+            flash("Insufficient balance", "error")
+            return redirect(url_for("transfer"))
+        
+        cursor.execute("SELECT BALANCE FROM users WHERE username = ?", (receiver_username,))
+        receiver_balance = cursor.fetchone()
+        
+        if not receiver_balance:
+            flash("Receiver username does not exist", "error")
+            return redirect(url_for("transfer"))
+        
+        if receiver_username == session["username"]:
+            flash("You cannot transfer to yourself", "error")
+            return redirect(url_for("transfer"))
+        
+        new_balance_sender = current_balance - amount
+        new_balance_receiver = receiver_balance[0] + amount
+        
+        cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance_sender, session["username"]))
+        cursor.execute("UPDATE users SET BALANCE = ? WHERE username = ?", (new_balance_receiver, receiver_username))
+        
+        conn.commit()
+        conn.close()
+        
+        flash(f"Transferred {amount} to {receiver_username} successfully", "success")
+        return redirect(url_for("dashboard"))
+        
+        
 app.run(debug=True)
