@@ -220,4 +220,16 @@ def transaction_history():
     conn.close()
     return render_template("transaction_history.html", transactions=transactions)
 
+@app.route("/profile")
+def profile():
+    
+    conn = sqlite3.connect("bank.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT username, email, balance FROM users WHERE username = ?", (session["username"],))
+    user = cursor.fetchone()
+    conn.close()
+    return render_template("profile.html", user=user)
+
 app.run(debug=True) 
