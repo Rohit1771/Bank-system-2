@@ -232,4 +232,36 @@ def profile():
     conn.close()
     return render_template("profile.html", user=user)
 
+@app.route("/change_password", methods=["GET", "POST"])
+def change_password():
+    if request.method == "POST":
+        old_password = request.form.get("old_password")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+
+        if new_password != confirm_password:
+            flash("New passwords do not match", "error")
+            return redirect(url_for("change_password"))
+        if old_password == new_password:
+            flash("New password cannot be the same as old password", "error")
+            return redirect(url_for("change_password"))
+
+        conn = sqlite3.connect("bank.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT password FROM users WHERE username = ?", (session["username"],))
+        current_password = cursor.fetchone()[0]
+
+        if old_password != current_password:
+            flash("Old password is incorrect", "error")
+            return redirect(url_for("change_password"))
+
+        cursor.execute("UPDATE users SET password = ? WHERE username = ?", (new_password, session["username"]))
+        conn.commit()
+        conn.close()
+
+        flash("Password changed successfully", "success")
+        return redirect(url_for("dashboard"))
+    return render_template("change_password.html")
+
 app.run(debug=True) 
