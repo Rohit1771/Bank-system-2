@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Rohit Bank{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="ledger-bg">
+
+  <header class="letterhead">
+    <a href="{{ url_for('home') }}" class="brand">
+      <span class="brand-mark">R</span>
+      <span class="brand-name">Rohit Bank</span>
+    </a>
+    {% if session.username %}
+    <nav class="topnav">
+      <span class="topnav-user">Account holder — <strong>{{ session.username }}</strong></span>
+      <a href="{{ url_for('logout') }}" class="link-quiet">Log out</a>
+    </nav>
+    {% endif %}
+  </header>
+  <div class="letterhead-rule"></div>
+
+  <main class="page">
+
+    {% if self.back()|trim %}
+      <div class="crumb">{% block back %}{% endblock %}</div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+        <div class="flash-stack">
+          {% for category, message in messages %}
+            <div class="flash {{ 'flash-ok' if category == 'success' else 'flash-err' }}">
+              <span class="flash-mark">{{ 'OK' if category == 'success' else '!' }}</span>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+  </main>
+
+  <footer class="site-footer">
+    <span>Rohit Bank — a student portfolio project · not a real bank</span>
+  </footer>
+
+</div>
+</body>
+</html>

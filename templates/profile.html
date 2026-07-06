@@ -1,29 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction History</title>
-</head>
-<body>
-    <h1>Profile</h1>
-    <table border="1" cellpadding="10">
-        <tr>
-            <th>username</th>
-            <td>{{ user["username"] }}</td>
-        </tr>
-        <tr>
+{% extends "base.html" %}
+{% block title %}Profile — Rohit Bank{% endblock %}
+{% block back %}<a href="{{ url_for('dashboard') }}">← Back to dashboard</a>{% endblock %}
 
-            <th>email</th>
-            <td>{{ user["email"] }}</td>
-        </tr>
-        <tr>    
+{% block content %}
+<p class="eyebrow">Account details</p>
+<h1 class="page-title">Profile</h1>
+<p class="page-sub">The details on file for your account.</p>
 
-            <th>balance</th>
-            <td>${{ "%.2f"|format(user["balance"]) }}</td>
-        </tr>
-    </table>
-    <br>
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
-</body>
-</html>
+<div class="table-wrap">
+  <table>
+    <tbody>
+      <tr>
+        <th>Username</th>
+        <td>{{ user["username"] }}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ user["email"] }}</td>
+      </tr>
+      <tr>
+        <th>Balance</th>
+        <td>₹{{ "{:,.2f}".format(user["balance"]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

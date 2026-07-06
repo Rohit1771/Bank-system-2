@@ -1,17 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Bank system </title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Rohit Bank — Welcome{% endblock %}
 
-    <h1>Welcome to Rohit's Bank</h1>
+{% block content %}
+<div class="hero">
+  <p class="eyebrow">Est. 2026 · Student ledger</p>
+  <h1>Banking, kept like a passbook.</h1>
+  <p>Every deposit, withdrawal and transfer written to your ledger — clear, dated, and easy to trace. Open an account or sign back in to see your balance.</p>
+  <div class="btn-row">
+    <a href="{{ url_for('login') }}" class="btn">Login</a>
+    <a href="{{ url_for('register') }}" class="btn btn-secondary">Open an account</a>
+  </div>
+</div>
 
-<a href="/login">
-    <button>Login</button>
-</a>
-<a href="/register">   
-    <button>Register</button>
-</a>
-</body>
- </html>
+<div class="card card--narrow card--passbook passbook-preview">
+  <p class="eyebrow">Sample passbook</p>
+  <div class="balance-row">
+    <div>
+      <p class="balance-label">Available balance</p>
+      <p class="balance-amount">₹ 12,450</p>
+    </div>
+    <div class="stamp">Ledger<br>Verified</div>
+  </div>
+</div>
+{% endblock %}

@@ -1,35 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-                {% for category, message in messages %}
-                  {% if category == 'success' %}
-                    <p style="color: green;">
-                        {{ message }}</p>
-                        {% else %}
-                        <p style="color: red;">
-                        {{ message }}</p>
-                    {% endif %}
-                {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <form action="/login" method="POST">
+{% extends "base.html" %}
+{% block title %}Log in — Rohit Bank{% endblock %}
 
-    <input type="text" name="username" 
-    placeholder="Username">
+{% block content %}
+<div class="card card--narrow">
+  <p class="eyebrow">Account access</p>
+  <h1 class="page-title">Log in</h1>
+  <p class="page-sub">Enter your credentials to open your ledger.</p>
 
-    <input type="password" name="password"
-    placeholder="Password">
+  <form action="/login" method="POST">
+    <div class="form-field">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="e.g. rohit1771" required>
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Your password" required>
+    </div>
+    <button type="submit" class="btn btn-block">Log in</button>
+  </form>
 
-    <button type="submit">"login"</button>
-    </form>
-
-    <p>Don't Have an account?</p>
-    <a href="/register">Register</a>
-
-</body>
-</html>
+  <div class="form-foot">
+    <span>New to Rohit Bank?</span>
+    <a href="/register">Open an account</a>
+  </div>
+</div>
+{% endblock %}

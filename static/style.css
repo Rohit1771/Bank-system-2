@@ -1,0 +1,541 @@
+/* ==========================================================================
+   Rohit Bank — "Passbook Ledger" design system
+   ========================================================================== */
+
+:root {
+  --ink: #16283D;
+  --ink-soft: #3C4E63;
+  --teal: #0F3D3E;
+  --teal-deep: #0A2C2D;
+  --paper: #E7ECE9;
+  --paper-card: #FFFFFF;
+  --line: #C7D2CC;
+  --line-strong: #A9B7B1;
+  --gold: #B08D2F;
+  --gold-soft: #E4D6A7;
+  --green-ok: #2F6B4F;
+  --green-soft: #DCEADD;
+  --rust: #9C3F2E;
+  --rust-soft: #F3DCD4;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, Segoe UI, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --radius: 4px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Ledger-lined page background */
+.ledger-bg {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    rgba(169, 183, 177, 0.35) 28px
+  );
+}
+
+/* ---------------------------------------------------------------------- */
+/* Letterhead header                                                      */
+/* ---------------------------------------------------------------------- */
+
+.letterhead {
+  background: var(--teal);
+  color: #F3F1E7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 32px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #F3F1E7;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--gold-soft);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--gold-soft);
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 21px;
+  letter-spacing: 0.01em;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+}
+
+.topnav-user { color: #CBD8D2; }
+.topnav-user strong { color: #fff; font-weight: 500; }
+
+.link-quiet {
+  color: var(--gold-soft);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(228, 214, 167, 0.5);
+  padding-bottom: 1px;
+}
+.link-quiet:hover { border-color: var(--gold-soft); }
+
+.letterhead-rule {
+  height: 5px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--gold) 0px,
+    var(--gold) 10px,
+    transparent 10px,
+    transparent 15px
+  );
+}
+
+/* ---------------------------------------------------------------------- */
+/* Page shell                                                              */
+/* ---------------------------------------------------------------------- */
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 36px 24px 64px;
+}
+
+.crumb {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+}
+.crumb a {
+  text-decoration: none;
+  color: var(--teal);
+  border-bottom: 1px solid var(--line-strong);
+}
+.crumb a:hover { border-color: var(--teal); }
+
+.site-footer {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  padding: 20px 0 28px;
+  letter-spacing: 0.02em;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Flash messages — inspection stamps                                     */
+/* ---------------------------------------------------------------------- */
+
+.flash-stack { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+
+.flash {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+
+.flash-mark {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transform: rotate(-8deg);
+}
+
+.flash-ok {
+  background: var(--green-soft);
+  color: var(--green-ok);
+  border-color: rgba(47, 107, 79, 0.25);
+}
+.flash-ok .flash-mark { border: 2px double var(--green-ok); }
+
+.flash-err {
+  background: var(--rust-soft);
+  color: var(--rust);
+  border-color: rgba(156, 63, 46, 0.25);
+}
+.flash-err .flash-mark { border: 2px double var(--rust); }
+
+/* ---------------------------------------------------------------------- */
+/* Cards                                                                   */
+/* ---------------------------------------------------------------------- */
+
+.card {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 28px -18px rgba(22, 40, 61, 0.45);
+  padding: 36px;
+  position: relative;
+}
+
+.card--narrow { max-width: 420px; margin: 0 auto; }
+
+/* Perforated "tear-off" top edge, used on the balance card */
+.card--passbook { margin-top: 18px; }
+.card--passbook::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 20px;
+  right: 20px;
+  height: 14px;
+  background-image: radial-gradient(circle, var(--paper) 4px, transparent 4.5px);
+  background-size: 18px 14px;
+  background-repeat: repeat-x;
+  background-position: top center;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  margin: 0 0 6px;
+}
+
+h1.page-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.page-sub {
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  margin: 0 0 28px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Forms                                                                   */
+/* ---------------------------------------------------------------------- */
+
+form { margin: 0; }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-field label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+  margin-bottom: 7px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 12px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: #fff;
+  color: var(--ink);
+  width: 100%;
+}
+
+input::placeholder { color: #97A3A6; }
+
+input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(176, 141, 47, 0.18);
+}
+
+.btn {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 13px 22px;
+  border-radius: 3px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px -6px rgba(22, 40, 61, 0.55); }
+.btn:active { transform: translateY(0); }
+
+.btn-block { width: 100%; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-secondary:hover { border-color: var(--ink); }
+
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+.form-foot {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--line-strong);
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.form-foot a { text-decoration: none; color: var(--teal); font-weight: 500; border-bottom: 1px solid var(--line-strong); }
+.form-foot a:hover { border-color: var(--teal); }
+
+/* ---------------------------------------------------------------------- */
+/* Dashboard — balance + action tiles                                     */
+/* ---------------------------------------------------------------------- */
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.balance-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  margin: 0 0 6px;
+}
+
+.balance-amount {
+  font-family: var(--font-mono);
+  font-size: 42px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  margin: 0;
+}
+
+.stamp {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  border: 3px double var(--gold);
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: rotate(-9deg);
+  flex-shrink: 0;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.action-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-tile:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -14px rgba(22, 40, 61, 0.4);
+}
+
+.action-tile .tile-icon {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--teal);
+}
+
+.action-tile .tile-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Tables — ledger rows                                                   */
+/* ---------------------------------------------------------------------- */
+
+.table-wrap {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  min-width: 480px;
+}
+
+th {
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+  border-bottom: 2px solid var(--ink);
+  padding: 12px 14px;
+  white-space: nowrap;
+}
+
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+tbody tr:hover td { background: rgba(176, 141, 47, 0.06); }
+tbody tr:last-child td { border-bottom: none; }
+
+.amount-in { color: var(--green-ok); font-weight: 500; }
+.amount-out { color: var(--rust); font-weight: 500; }
+
+.empty-row td {
+  text-align: center;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  padding: 32px 14px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Landing page hero                                                       */
+/* ---------------------------------------------------------------------- */
+
+.hero {
+  text-align: center;
+  max-width: 620px;
+  margin: 28px auto 48px;
+}
+
+.hero .eyebrow { justify-content: center; }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 8px 0 14px;
+}
+
+.hero p {
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 0 30px;
+}
+
+.hero .btn-row { justify-content: center; margin-top: 0; }
+
+.passbook-preview {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Responsive                                                              */
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .letterhead { padding: 14px 18px; }
+  .page { padding: 26px 16px 48px; }
+  .card { padding: 24px; }
+  .balance-amount { font-size: 32px; }
+  .hero h1 { font-size: 32px; }
+  .form-foot { flex-direction: column; align-items: flex-start; }
+}

@@ -1,43 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-                {% for category, message in messages %}
-                  {% if category == 'success' %}
-                    <p style="color: green;">
-                        {{ message }}</p>
-                        {% else %}
-                        <p style="color: red;">
-                        {{ message }}</p>
-                    {% endif %}
-                {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <h1>Mini Bank Dashboard</h1>
+{% extends "base.html" %}
+{% block title %}Dashboard — Rohit Bank{% endblock %}
 
-    <h2>Welcome,{{ username }}</h2>
+{% block content %}
+<p class="eyebrow">Your ledger</p>
+<h1 class="page-title">Welcome, {{ username }}</h1>
+<p class="page-sub">Here's where things stand today.</p>
 
-    <hr>
+<div class="card card--passbook">
+  <div class="balance-row">
+    <div>
+      <p class="balance-label">Available balance</p>
+      <p class="balance-amount">₹ {{ "{:,.2f}".format(balance) }}</p>
+    </div>
+    <div class="stamp">Acct<br>Active</div>
+  </div>
 
-    <h3>Balance : {{ balance }}</h3>
-
-    <br>
-    <button><a href="/profile">Profile</a></button>
-    <button><a href="/deposit">Deposit</a></button>
-    <button><a href="/withdraw">Withdraw</a></button>
-    <button><a href="/transfer">Transfer</a></button>
-    <button><a href="/transaction_history">Transaction History</a></button>
-    <button><a href="/change_password">Change Password</a></button>
-    <br><br>
-
-    <a
-    href="{{ url_for('logout')}}">Logout</a>
-
-</body>
- </html>
+  <div class="action-grid">
+    <a href="{{ url_for('deposit') }}" class="action-tile">
+      <span class="tile-icon">↓</span>
+      <span class="tile-label">Deposit</span>
+    </a>
+    <a href="{{ url_for('withdraw') }}" class="action-tile">
+      <span class="tile-icon">↑</span>
+      <span class="tile-label">Withdraw</span>
+    </a>
+    <a href="{{ url_for('transfer') }}" class="action-tile">
+      <span class="tile-icon">⇄</span>
+      <span class="tile-label">Transfer</span>
+    </a>
+    <a href="{{ url_for('transaction_history') }}" class="action-tile">
+      <span class="tile-icon">≡</span>
+      <span class="tile-label">History</span>
+    </a>
+    <a href="{{ url_for('profile') }}" class="action-tile">
+      <span class="tile-icon">◐</span>
+      <span class="tile-label">Profile</span>
+    </a>
+    <a href="{{ url_for('change_password') }}" class="action-tile">
+      <span class="tile-icon">✎</span>
+      <span class="tile-label">Password</span>
+    </a>
+  </div>
+</div>
+{% endblock %}

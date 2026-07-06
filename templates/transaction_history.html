@@ -1,31 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction History</title>
-</head>
-<body>
-    <h1>Transaction History</h1>
-    <table border="1" cellpadding="10">
-        <tr>
-            <th>Sender</th>
-            <th>Receiver</th>
-            <th>Amount</th>
-            <th>Type</th>
-            <th>Date</th>
-        </tr>
-        {% for transaction in transactions %}
-        <tr>
-            <td>{{ transaction.sender }}</td>
-            <td>{{ transaction.receiver }}</td>
-            <td>${{ "%.2f"|format(transaction.amount) }}</td>
-            <td>{{ transaction.transaction_type }}</td>
-            <td>{{ transaction.date }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <br>
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Transaction history — Rohit Bank{% endblock %}
+{% block back %}<a href="{{ url_for('dashboard') }}">← Back to dashboard</a>{% endblock %}
+
+{% block content %}
+<p class="eyebrow">Full ledger</p>
+<h1 class="page-title">Transaction history</h1>
+<p class="page-sub">Every deposit, withdrawal and transfer on your account, most recent first.</p>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Amount</th>
+        <th>Type</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+      <tr>
+        <td>{{ transaction.sender }}</td>
+        <td>{{ transaction.receiver }}</td>
+        {% if transaction.transaction_type == 'Withdrawal' or (transaction.transaction_type == 'Transfer' and transaction.sender == session.username) %}
+        <td class="amount-out">−₹{{ "{:,.2f}".format(transaction.amount) }}</td>
+        {% else %}
+        <td class="amount-in">+₹{{ "{:,.2f}".format(transaction.amount) }}</td>
+        {% endif %}
+        <td>{{ transaction.transaction_type }}</td>
+        <td>{{ transaction.date }}</td>
+      </tr>
+      {% else %}
+      <tr class="empty-row">
+        <td colspan="5">No transactions yet — your ledger is clean.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
